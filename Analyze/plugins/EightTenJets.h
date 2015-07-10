@@ -70,12 +70,13 @@ class EightTenJets : public edm::EDAnalyzer {
       virtual void analyze(const edm::Event&, const edm::EventSetup&) override;
       virtual void endJob() override;
       void Init();
-      void SphericityAplanarity(float& sphericity, float& aplanarity, std::vector<float> px, std::vector<float> py, std::vector<float> pz);
+      void SphericityAplanarity(float& sphericity, float& aplanarity, std::vector<float> px, std::vector<float> py, std::vector<float> pz, int nJets);
       
       
       edm::InputTag  _trigResultsLabel;
       edm::EDGetTokenT<reco::VertexCollection> _vtxToken;
       edm::EDGetTokenT<pat::JetCollection> _jetToken;
+      edm::EDGetTokenT<pat::JetCollection> _fatjetToken;
       edm::EDGetTokenT<edm::View<reco::GenParticle> > _prunedGenToken;
       edm::EDGetTokenT <reco::GenJetCollection> _genJetsToken;
       bool _isMC, _wtMC;
@@ -101,6 +102,10 @@ class EightTenJets : public edm::EDAnalyzer {
 			float _partonSphericity, _partonAplanarity, _partonHt;
 			int _partonNJet;
 			
+		//FatJets
+			std::vector<float> _fatPt, _fatEta, _fatPhi, _fatPx, _fatPy, _fatPz, _fatMass, _fatSoftDroppedMass, _fatPrunedMass, _fatTrimmedMass, _fatEnergy, _fatBeta, _fatNhf, _fatPhf, _fatChf, _fatMuf, _fatElf, _fatJec, _fatJecUnc, _fatBTag, _fatPuMva;
+			float _fatSphericity, _fatAplanarity, _fatHt;
+			int  _fatNJet;
       
       
       
