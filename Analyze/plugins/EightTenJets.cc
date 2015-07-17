@@ -25,6 +25,7 @@ EightTenJets::EightTenJets(const edm::ParameterSet& iConfig) :
 	_tree->Branch("evtNo",&_evtNo,"evtNo/I");
 	_tree->Branch("runNo",&_runNo,"runNo/I");
 	_tree->Branch("lumiNo",&_lumiNo,"lumiNo/I");
+	_tree->Branch("triggerPass", &_trig_pass);
 	if ( _isMC && _wtMC )
 		_tree->Branch("weight", &_weight, "weight/F");
 		
@@ -132,6 +133,7 @@ void EightTenJets::Init()
 	_phf.clear();
 	_muf.clear();
 	_elf.clear();
+	_jec.clear();
 	_jecUnc.clear();
 	_bTag.clear();
 	_puMva.clear();
@@ -158,6 +160,7 @@ void EightTenJets::Init()
 	_fatPhf.clear();
 	_fatMuf.clear();
 	_fatElf.clear();
+	_fatJec.clear();
 	_fatJecUnc.clear();
 	_fatBTag.clear();
 	_fatPuMva.clear();
@@ -245,10 +248,7 @@ EightTenJets::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     
     for (const pat::Jet &j : *jets) 
     {
-        
-   //   printf("jet  with pt %5.1f (raw pt %5.1f), eta %+4.2f, btag CSV %.3f, CISV %.3f, pileup mva disc %+.2f\n",
-         //   j.pt(), j.pt()*j.jecFactor("Uncorrected"), j.eta(), std::max(0.f,j.bDiscriminator("combinedSecondaryVertexBJetTags")), std::max(0.f,j.bDiscriminator("combinedInclusiveSecondaryVertexBJetTags")), j.userFloat("pileupJetId:fullDiscriminant"));
-		float t_chf = j.chargedHadronEnergyFraction();
+        float t_chf = j.chargedHadronEnergyFraction();
 		float t_nhf = j.neutralHadronEnergyFraction() + j.HFHadronEnergyFraction();
 		float t_phf = j.photonEnergy()/(j.jecFactor(0) * j.energy());
 		float t_elf = j.electronEnergy()/(j.jecFactor(0) * j.energy());

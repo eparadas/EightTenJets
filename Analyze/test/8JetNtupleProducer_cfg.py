@@ -26,7 +26,7 @@ process.EightTenJets = cms.EDAnalyzer("EightTenJets",
     wtMC = cms.bool(True),
     ptMin = cms.double(50),
     etaMin = cms.double(2.5),
-    nJetsToBeKept = cms.int32(0)
+    nJetsToBeKept = cms.int32(4)
     
 )
 
