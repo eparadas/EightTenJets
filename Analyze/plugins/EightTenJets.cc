@@ -7,12 +7,12 @@
 
 EightTenJets::EightTenJets(const edm::ParameterSet& iConfig) :
 
-	_trigResultsLabel("TriggerResults", "", "HLT"),
 	_vtxToken(consumes<reco::VertexCollection>(iConfig.getParameter<edm::InputTag>("vertices"))),
 	_jetToken(consumes<pat::JetCollection>(iConfig.getParameter<edm::InputTag>("jets"))),
 	_fatjetToken(consumes<pat::JetCollection>(iConfig.getParameter<edm::InputTag>("fatjets"))),
 	_prunedGenToken(consumes<edm::View<reco::GenParticle> >(iConfig.getParameter<edm::InputTag>("pruned"))),
 	_genJetsToken(consumes<reco::GenJetCollection>(iConfig.getParameter<edm::InputTag>("genjets"))),
+	_triggerBits(consumes<edm::TriggerResults>(iConfig.getParameter<edm::InputTag>("bits"))),
 	_isMC( iConfig.getParameter<bool>("isMC") ),
 	_wtMC( iConfig.getParameter<bool>("wtMC") ),
 	_bTagValue( iConfig.getParameter<double>("bTagValue") ),
@@ -30,6 +30,7 @@ EightTenJets::EightTenJets(const edm::ParameterSet& iConfig) :
 		_tree->Branch("weight", &_weight, "weight/F");
 		
 	//Jets
+	_tree->Branch("et","vector<float>", &_et);
 	_tree->Branch("pt","vector<float>", &_pt);
 	_tree->Branch("eta","vector<float>", &_eta);
 	_tree->Branch("phi","vector<float>", &_phi);
@@ -120,6 +121,7 @@ void EightTenJets::Init()
 	if ( _isMC && _wtMC )
 		_weight = -999;
 		
+	_et.clear();
 	_pt.clear();
 	_eta.clear();
 	_phi.clear();
@@ -225,16 +227,16 @@ EightTenJets::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     if (vertices->empty()) return; // skip the event if no PV found
     const reco::Vertex &PV = vertices->front();
 
-	edm::Handle<edm::TriggerResults> H_trig;
-	iEvent.getByLabel(_trigResultsLabel, H_trig);
-	
-	_trig_pass = "";
-	const edm::TriggerNames & triggerNames = iEvent.triggerNames(*H_trig);
-	for (int iHLT = 0 ; iHLT<static_cast<int>(H_trig->size()); ++iHLT) 
-	{
-		if (H_trig->accept (iHLT)) 
+	edm::Handle<edm::TriggerResults> triggerBits;    
+    iEvent.getByToken(_triggerBits, triggerBits);
+
+    const edm::TriggerNames &names = iEvent.triggerNames(*triggerBits);
+    _trig_pass = "";
+    for (unsigned int i = 0, n = triggerBits->size(); i < n; ++i) 
+    {
+		if ( triggerBits->accept(i) )
 		{
-			TString path = TString(triggerNames.triggerName(iHLT));
+			TString path = TString(names.triggerName(i));
 			_trig_pass += "_%_"+path ;
 		}
 	}
@@ -261,6 +263,7 @@ EightTenJets::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 		
 		if ( (id) && (j.pt() > _ptMin) && (j.eta() < _etaMin) )
 		{
+			_et.push_back(j.et());
 			_pt.push_back(j.pt());
 			_ht += j.pt();
 			_eta.push_back(j.eta());

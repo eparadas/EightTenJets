@@ -73,12 +73,13 @@ class EightTenJets : public edm::EDAnalyzer {
       void SphericityAplanarity(float& sphericity, float& aplanarity, std::vector<float> px, std::vector<float> py, std::vector<float> pz, int nJets);
       
       
-      edm::InputTag  _trigResultsLabel;
+    //  edm::InputTag  _trigResultsLabel;
       edm::EDGetTokenT<reco::VertexCollection> _vtxToken;
       edm::EDGetTokenT<pat::JetCollection> _jetToken;
       edm::EDGetTokenT<pat::JetCollection> _fatjetToken;
       edm::EDGetTokenT<edm::View<reco::GenParticle> > _prunedGenToken;
       edm::EDGetTokenT <reco::GenJetCollection> _genJetsToken;
+      edm::EDGetTokenT<edm::TriggerResults> _triggerBits;
       bool _isMC, _wtMC;
       float _bTagValue, _ptMin, _etaMin;
       int _nJetsToBeKept;
@@ -90,7 +91,7 @@ class EightTenJets : public edm::EDAnalyzer {
 		int _evtNo, _runNo, _lumiNo;
 		float _weight;
 		//Jets
-			std::vector<float> _pt, _eta, _phi, _px, _py, _pz, _mass, _energy, _beta, _nhf, _phf, _chf, _muf, _elf, _jec, _jecUnc, _bTag, _puMva;
+			std::vector<float> _et, _pt, _eta, _phi, _px, _py, _pz, _mass, _energy, _beta, _nhf, _phf, _chf, _muf, _elf, _jec, _jecUnc, _bTag, _puMva;
 			float _sphericity, _aplanarity, _ht;
 			int  _nJet, _nJetBdisc, _nJetAll;
 		//GenJets

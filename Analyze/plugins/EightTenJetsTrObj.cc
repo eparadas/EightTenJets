@@ -382,14 +382,20 @@ EightTenJetsTrObj::analyze(const edm::Event& iEvent, const edm::EventSetup& iSet
     {
         obj.unpackPathNames(names);
 
-      	bool CaloFilterFlag(false);
-	for(unsigned int jj=0; jj<obj.filterIds().size(); jj++)
+      	//bool CaloFilterFlag(false);
+	/*for(unsigned int jj=0; jj<obj.filterIds().size(); jj++)
 	{
-	  if ( obj.filterIds()[jj] == 85 )
-	    CaloFilterFlag = true;
-	}
-        if ( (obj.collection() == "hltAK4CaloJetsCorrected::HLT") && (CaloFilterFlag) )
+	 // if ( obj.filterIds()[jj] == 85 )
+	 //   CaloFilterFlag = true;
+	 std::cout << obj.filterIds()[jj] << "\t";
+	}*/
+	std::cout << std::endl;
+
+        if ( (obj.collection() == "hltAK4CaloJetsCorrected::HLT") )//&& (CaloFilterFlag) )
         {
+		for(unsigned int jj=0; jj<obj.filterIds().size(); jj++)
+        {std::cout << obj.filterIds()[jj] << "\t";
+        }
 		_trObjCALOPt.push_back(obj.pt());
 		_trObjCALOEt.push_back(obj.et());		
 		_trObjCALOEta.push_back(obj.eta());
@@ -400,14 +406,20 @@ EightTenJetsTrObj::analyze(const edm::Event& iEvent, const edm::EventSetup& iSet
 	if ( (obj.collection() == "hltHtMht4JetPt50::HLT") && (obj.filterIds()[0] == 89) )
 		_trObjCALOHt = obj.pt();
 
-	bool PfFilterFlag(false);
-        for(unsigned int jj=0; jj<obj.filterIds().size(); jj++)
+	//bool PfFilterFlag(false);
+       /* for(unsigned int jj=0; jj<obj.filterIds().size(); jj++)
         {
-          if ( obj.filterIds()[jj] == 85 )
-            PfFilterFlag = true;
+          //if ( obj.filterIds()[jj] == 85 )
+           // PfFilterFlag = true;
+          std::cout << obj.filterIds()[jj] << "\t";
+        }*/
+	std::cout << std::endl;
+	if ( (obj.collection() == "hltAK4PFJetsCorrected::HLT") )//&& (PfFilterFlag) )
+        {
+		for(unsigned int jj=0; jj<obj.filterIds().size(); jj++)
+        {std::cout << obj.filterIds()[jj] << "\t";
         }
-	if ( (obj.collection() == "hltAK4PFJetsCorrected::HLT") && (PfFilterFlag) )
-        {
+
 			_trObjPFPt.push_back(obj.pt());
 			_trObjPFEt.push_back(obj.et());
             _trObjPFEta.push_back(obj.eta());
